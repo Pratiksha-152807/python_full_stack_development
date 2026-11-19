@@ -7,7 +7,7 @@ class StudentFormViewTests(TestCase):
         response = self.client.get('/add_form/')
 
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, 'get you registered')
+        self.assertContains(response, 'Student registration')
 
     def test_duplicate_registration_number_is_rejected(self):
         Student_table.objects.create(reg_no=123, name='Existing student')

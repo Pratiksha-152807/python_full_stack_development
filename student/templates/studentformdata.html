@@ -8,16 +8,16 @@
     <style>
         :root {
             color-scheme: light;
-            font-family: Inter, "Segoe UI", Arial, sans-serif;
-            color: #172b3a;
-            background: #f3f7f8;
+            font-family: "Segoe UI", Arial, sans-serif;
+            color: #1d2c3b;
+            background: #f3f5f8;
             font-synthesis: none;
             text-rendering: optimizeLegibility;
             -webkit-font-smoothing: antialiased;
-            --muted: #647783;
-            --line: #dce6e9;
-            --accent: #087e83;
-            --accent-dark: #06676c;
+            --muted: #627181;
+            --line: #dce3e9;
+            --navy: #18354a;
+            --accent: #286184;
         }
 
         * {
@@ -28,96 +28,121 @@
             min-width: 320px;
             min-height: 100vh;
             margin: 0;
-            padding: 48px 20px;
-            background:
-                radial-gradient(ellipse at 12% 8%, #d8f0ed 0, transparent 34rem),
-                radial-gradient(ellipse at 92% 92%, #e5e9f8 0, transparent 30rem),
-                #f7f9fa;
+            padding: 38px 20px;
+            background: #f3f5f8;
         }
 
         .page {
-            width: min(100%, 720px);
+            width: min(100%, 760px);
             margin: 0 auto;
+        }
+
+        .site-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin: 0 2px 24px;
         }
 
         .brand {
             display: flex;
             align-items: center;
             gap: 11px;
-            margin: 0 0 22px 4px;
-            color: #264455;
+            color: var(--navy);
             font-size: 14px;
             font-weight: 700;
-            letter-spacing: .02em;
+            letter-spacing: .01em;
         }
 
         .brand-mark {
             display: grid;
-            width: 36px;
-            height: 36px;
+            width: 34px;
+            height: 34px;
             place-items: center;
-            border-radius: 12px;
-            background: #d7efeb;
-            color: var(--accent-dark);
-            font-size: 17px;
+            border-radius: 8px;
+            background: var(--navy);
+            color: #fff;
+            font-size: 15px;
+            font-weight: 700;
+        }
+
+        .portal-label {
+            margin: 0;
+            color: #6a7886;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: .11em;
         }
 
         .card {
             overflow: hidden;
-            border: 1px solid rgba(220, 230, 233, .9);
-            border-radius: 22px;
+            border: 1px solid var(--line);
+            border-radius: 14px;
             background: #fff;
-            box-shadow: 0 24px 70px rgba(30, 59, 71, .10);
+            box-shadow: 0 12px 34px rgba(27, 47, 66, .08);
         }
 
         .card-header {
-            padding: 36px 40px 28px;
-            border-bottom: 1px solid #edf1f2;
+            padding: 34px 40px 32px;
+            background: var(--navy);
+            color: #fff;
         }
 
         .eyebrow {
-            margin: 0 0 11px;
-            color: var(--accent-dark);
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            margin: 0 0 14px;
+            color: #c3d6e2;
             font-size: 11px;
-            font-weight: 800;
-            letter-spacing: .13em;
+            font-weight: 700;
+            letter-spacing: .12em;
             text-transform: uppercase;
+        }
+
+        .eyebrow::before {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: #7bc2bd;
+            content: "";
         }
 
         h1 {
             margin: 0;
-            color: #173344;
-            font-size: clamp(26px, 5vw, 34px);
-            letter-spacing: -.04em;
-            line-height: 1.15;
+            color: #fff;
+            font-size: clamp(26px, 5vw, 32px);
+            font-weight: 650;
+            letter-spacing: -.025em;
+            line-height: 1.2;
         }
 
         .intro {
-            max-width: 470px;
-            margin: 12px 0 0;
-            color: var(--muted);
-            font-size: 15px;
-            line-height: 1.6;
+            max-width: 550px;
+            margin: 11px 0 0;
+            color: #d4e0e8;
+            font-size: 14px;
+            line-height: 1.65;
         }
 
         .card-body {
-            padding: 30px 40px 36px;
+            padding: 30px 40px 34px;
         }
 
         .required-note {
-            margin: 0 0 23px;
+            margin: 0 0 22px;
             color: var(--muted);
             font-size: 13px;
         }
 
         .required-note span {
-            color: #bd4d43;
+            color: #b33a32;
         }
 
         .form-grid {
             display: grid;
             grid-template-columns: repeat(2, minmax(0, 1fr));
-            gap: 21px 18px;
+            gap: 20px 18px;
         }
 
         .form-field {
@@ -130,58 +155,58 @@
 
         .form-field label {
             display: block;
-            margin-bottom: 8px;
-            color: #314957;
+            margin-bottom: 7px;
+            color: #293d4e;
             font-size: 13px;
-            font-weight: 700;
+            font-weight: 650;
         }
 
         .field-input {
             display: block;
             width: 100%;
-            min-height: 48px;
-            padding: 12px 14px;
-            border: 1px solid #cfdcdf;
-            border-radius: 10px;
+            min-height: 46px;
+            padding: 11px 13px;
+            border: 1px solid #cbd5de;
+            border-radius: 7px;
             outline: none;
             background: #fff;
-            color: #172b3a;
+            color: #1d2c3b;
             font: inherit;
             font-size: 14px;
-            transition: border-color .16s ease, box-shadow .16s ease;
+            transition: border-color .15s ease, box-shadow .15s ease;
         }
 
         .field-input::placeholder {
-            color: #97a6ad;
+            color: #8996a3;
         }
 
         .field-input:hover {
-            border-color: #9db5ba;
+            border-color: #9aaab8;
         }
 
         .field-input:focus {
             border-color: var(--accent);
-            box-shadow: 0 0 0 3px rgba(8, 126, 131, .14);
+            box-shadow: 0 0 0 3px rgba(40, 97, 132, .14);
         }
 
         .form-field--error .field-input {
-            border-color: #c94b42;
+            border-color: #b33a32;
         }
 
         .field-error {
             margin: 7px 0 0;
-            color: #a3342d;
+            color: #a52e28;
             font-size: 13px;
             line-height: 1.45;
         }
 
         .notice {
             margin: 0 0 22px;
-            padding: 13px 15px;
-            border: 1px solid #b9e2d2;
-            border-radius: 10px;
-            background: #effaf5;
-            color: #176345;
+            padding: 12px 14px;
+            border: 1px solid #b8d9c8;
+            border-radius: 7px;
+            background: #f0f8f3;
+            color: #245c3e;
             font-size: 14px;
             line-height: 1.5;
         }
@@ -190,34 +215,35 @@
             display: flex;
             align-items: center;
             gap: 16px;
-            margin-top: 28px;
+            margin-top: 26px;
+            padding-top: 22px;
+            border-top: 1px solid #e8edf1;
         }
 
         .submit-button {
             display: inline-flex;
-            min-height: 48px;
+            min-height: 46px;
             align-items: center;
             justify-content: center;
-            padding: 0 22px;
-            border: 0;
-            border-radius: 10px;
+            padding: 0 20px;
+            border: 1px solid var(--accent);
+            border-radius: 7px;
             background: var(--accent);
             color: #fff;
             cursor: pointer;
             font: inherit;
             font-size: 14px;
-            font-weight: 700;
-            transition: background .16s ease, transform .16s ease, box-shadow .16s ease;
+            font-weight: 650;
+            transition: background .15s ease, box-shadow .15s ease;
         }
 
         .submit-button:hover {
-            transform: translateY(-1px);
-            background: var(--accent-dark);
-            box-shadow: 0 7px 16px rgba(8, 126, 131, .2);
+            background: #1d4d6b;
+            box-shadow: 0 4px 10px rgba(24, 53, 74, .16);
         }
 
         .submit-button:focus-visible {
-            outline: 3px solid rgba(8, 126, 131, .35);
+            outline: 3px solid rgba(40, 97, 132, .28);
             outline-offset: 3px;
         }
 
@@ -230,24 +256,32 @@
 
         @media (max-width: 560px) {
             body {
-                padding: 24px 14px;
+                padding: 22px 14px;
+            }
+
+            .site-header {
+                margin-bottom: 18px;
+            }
+
+            .portal-label {
+                font-size: 10px;
             }
 
             .card {
-                border-radius: 17px;
+                border-radius: 11px;
             }
 
             .card-header {
-                padding: 28px 23px 23px;
+                padding: 27px 23px 24px;
             }
 
             .card-body {
-                padding: 24px 23px 28px;
+                padding: 23px;
             }
 
             .form-grid {
                 grid-template-columns: 1fr;
-                gap: 18px;
+                gap: 17px;
             }
 
             .form-field--wide {
@@ -257,6 +291,7 @@
             .form-actions {
                 align-items: stretch;
                 flex-direction: column;
+                gap: 12px;
             }
 
             .submit-button {
@@ -268,7 +303,6 @@
             *,
             *::before,
             *::after {
-                scroll-behavior: auto !important;
                 transition-duration: .01ms !important;
             }
         }
@@ -276,16 +310,19 @@
 </head>
 <body>
     <main class="page">
-        <div class="brand" aria-label="Student portal">
-            <span class="brand-mark" aria-hidden="true">S</span>
-            <span>Student portal</span>
-        </div>
+        <header class="site-header">
+            <div class="brand">
+                <span class="brand-mark" aria-hidden="true">S</span>
+                <span>Student services</span>
+            </div>
+            <p class="portal-label">REGISTRATION PORTAL</p>
+        </header>
 
         <section class="card" aria-labelledby="form-title">
             <header class="card-header">
-                <p class="eyebrow">Student registration</p>
-                <h1 id="form-title">Let’s get you registered</h1>
-                <p class="intro">Add your details below to create your student record. It only takes a moment.</p>
+                <p class="eyebrow">Student record</p>
+                <h1 id="form-title">Student registration</h1>
+                <p class="intro">Complete the form below to create your student record. Use your official registration number and a valid email address.</p>
             </header>
 
             <div class="card-body">
@@ -312,8 +349,8 @@
                     </div>
 
                     <div class="form-actions">
-                        <button class="submit-button" type="submit">Register student</button>
-                        <p class="privacy-note">Your details are used to create your student record.</p>
+                        <button class="submit-button" type="submit">Submit registration</button>
+                        <p class="privacy-note">Please verify your information before submitting.</p>
                     </div>
                 </form>
             </div>
