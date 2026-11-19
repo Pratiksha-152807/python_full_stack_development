@@ -20,7 +20,10 @@ from student import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('home/',views.home,name='home page'),
-    path('about/',views.about,name='about page'),
-     path('contact/',views.contact,name='contact page')
+    path('home/', views.home, name='home page'),
+    path('about/', views.about, name='about page'),
+    path('contact/', views.contact, name='contact page'),
+    path('add/', views.forms1, name='add'),
+    path('add_form/', views.student_form_dj, name='student_form'),
 ]
+
