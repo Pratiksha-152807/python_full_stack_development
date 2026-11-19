@@ -1,4 +1,5 @@
 from django.test import TestCase
+from django.contrib.auth.models import User
 from .models import Student_table
 
 
@@ -43,3 +44,50 @@ class StudentFormViewTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'Enter a whole number.')
         self.assertContains(response, 'Enter a valid email address.')
+
+
+class AuthenticationViewTests(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(
+            username='student-test',
+            password='test-password-123',
+        )
+
+    def test_login_page_renders_accessible_fields(self):
+        response = self.client.get('/login/')
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'for="username"')
+        self.assertContains(response, 'for="password"')
+
+    def test_invalid_login_shows_error(self):
+        response = self.client.post('/login/', {
+            'username': self.user.username,
+            'password': 'incorrect-password',
+        })
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'Invalid username or password.')
+
+    def test_login_opens_dashboard(self):
+        response = self.client.post('/login/', {
+            'username': self.user.username,
+            'password': 'test-password-123',
+        }, follow=True)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'Welcome back, student-test')
+        self.assertContains(response, 'Sign out')
+
+    def test_dashboard_requires_login(self):
+        response = self.client.get('/dashboard/')
+
+        self.assertRedirects(response, '/login/?next=/dashboard/')
+
+    def test_logout_ends_session(self):
+        self.client.force_login(self.user)
+
+        response = self.client.post('/logout/', follow=True)
+
+        self.assertRedirects(response, '/login/')
+        self.assertRedirects(self.client.get('/dashboard/'), '/login/?next=/dashboard/')

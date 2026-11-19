@@ -4,6 +4,8 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from .models import Student_table
 from .forms import Studentform_data
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 
 
 def home(request):
@@ -58,15 +60,20 @@ def student_form_dj(request):
             if Student_table.objects.filter(reg_no=reg_no).exists():
                 form.add_error(
                     'reg_no1',
-                    'A student with this registration number is already registered.',
+                    'A student with this registration number is already registered.'
                 )
-                return render(request, 'studentformdata.html', {'form': form})
+                return render(
+                    request,
+                    'studentformdata.html',
+                    {'form': form}
+                )
 
             Student_table.objects.create(
                 reg_no=reg_no,
                 name=form.cleaned_data['name1'],
                 email=form.cleaned_data['email1']
             )
+
             messages.success(request, 'Student registered successfully.')
             return redirect('student_form')
 
@@ -74,3 +81,36 @@ def student_form_dj(request):
 
     form = Studentform_data()
     return render(request, 'studentformdata.html', {'form': form})
+
+
+def user_login(request):
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+
+        user = authenticate(
+            request,
+            username=username,
+            password=password
+        )
+
+        if user is not None:
+            login(request, user)
+            return redirect('dashboard')
+
+        messages.error(request, 'Invalid username or password.')
+
+    return render(request, 'login.html')
+
+
+@login_required(login_url='login')
+def dashboard(request):
+    return render(request, 'dashboard.html')
+
+
+def user_logout(request):
+    if request.method == 'POST':
+        logout(request)
+        return redirect('login')
+
+    return HttpResponse("Invalid request method.")

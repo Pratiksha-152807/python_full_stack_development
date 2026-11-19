@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="color-scheme" content="light">
+    <title>Dashboard | Student services</title>
+    <style>
+        :root {
+            color-scheme: light;
+            font-family: "Segoe UI", Arial, sans-serif;
+            color: #1d2c3b;
+            background: #f3f5f8;
+            font-synthesis: none;
+            text-rendering: optimizeLegibility;
+            -webkit-font-smoothing: antialiased;
+            --muted: #627181;
+            --line: #dce3e9;
+            --navy: #18354a;
+            --accent: #286184;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            min-width: 320px;
+            min-height: 100vh;
+            margin: 0;
+            background: #f3f5f8;
+        }
+
+        .topbar {
+            display: flex;
+            min-height: 68px;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 max(24px, calc((100% - 1080px) / 2));
+            border-bottom: 1px solid #dce3e9;
+            background: #fff;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 11px;
+            color: var(--navy);
+            font-size: 14px;
+            font-weight: 700;
+            text-decoration: none;
+        }
+
+        .brand-mark {
+            display: grid;
+            width: 34px;
+            height: 34px;
+            place-items: center;
+            border-radius: 8px;
+            background: var(--navy);
+            color: #fff;
+            font-size: 15px;
+        }
+
+        .topbar-actions {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .registration-link {
+            color: #38536a;
+            font-size: 13px;
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        .registration-link:hover {
+            color: var(--accent);
+            text-decoration: underline;
+        }
+
+        .logout-form {
+            margin: 0;
+        }
+
+        .logout-button {
+            min-height: 36px;
+            padding: 0 13px;
+            border: 1px solid #cbd5de;
+            border-radius: 6px;
+            background: #fff;
+            color: #34495b;
+            cursor: pointer;
+            font: inherit;
+            font-size: 13px;
+            font-weight: 600;
+            transition: border-color .15s ease, background .15s ease;
+        }
+
+        .logout-button:hover {
+            border-color: #9eacb8;
+            background: #f7f9fa;
+        }
+
+        .logout-button:focus-visible,
+        .registration-link:focus-visible,
+        .brand:focus-visible,
+        .primary-link:focus-visible {
+            outline: 3px solid rgba(40, 97, 132, .25);
+            outline-offset: 3px;
+        }
+
+        .dashboard {
+            width: min(100% - 40px, 1080px);
+            margin: 48px auto;
+        }
+
+        .breadcrumb {
+            margin: 0 0 12px;
+            color: var(--muted);
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .page-heading {
+            margin-bottom: 28px;
+        }
+
+        .page-heading h1 {
+            margin: 0;
+            color: var(--navy);
+            font-size: clamp(28px, 4vw, 36px);
+            font-weight: 650;
+            letter-spacing: -.025em;
+        }
+
+        .page-heading p:last-child {
+            margin: 9px 0 0;
+            color: var(--muted);
+            font-size: 15px;
+            line-height: 1.6;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: minmax(0, 1.5fr) minmax(240px, .8fr);
+            gap: 20px;
+        }
+
+        .card {
+            border: 1px solid var(--line);
+            border-radius: 11px;
+            background: #fff;
+            box-shadow: 0 7px 22px rgba(27, 47, 66, .045);
+        }
+
+        .action-card {
+            display: flex;
+            min-height: 250px;
+            flex-direction: column;
+            align-items: flex-start;
+            justify-content: space-between;
+            padding: 28px;
+        }
+
+        .card-label {
+            margin: 0 0 11px;
+            color: var(--accent);
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: .1em;
+            text-transform: uppercase;
+        }
+
+        .action-card h2 {
+            margin: 0;
+            color: var(--navy);
+            font-size: 21px;
+            font-weight: 650;
+            letter-spacing: -.01em;
+        }
+
+        .action-card p:not(.card-label) {
+            max-width: 440px;
+            margin: 9px 0 22px;
+            color: var(--muted);
+            font-size: 14px;
+            line-height: 1.65;
+        }
+
+        .primary-link {
+            display: inline-flex;
+            min-height: 42px;
+            align-items: center;
+            justify-content: center;
+            padding: 0 15px;
+            border: 1px solid var(--accent);
+            border-radius: 6px;
+            background: var(--accent);
+            color: #fff;
+            font-size: 13px;
+            font-weight: 650;
+            text-decoration: none;
+            transition: background .15s ease, box-shadow .15s ease;
+        }
+
+        .primary-link:hover {
+            background: #1d4d6b;
+            box-shadow: 0 4px 10px rgba(24, 53, 74, .14);
+        }
+
+        .account-card {
+            padding: 25px;
+        }
+
+        .account-card h2 {
+            margin: 0 0 20px;
+            color: var(--navy);
+            font-size: 15px;
+            font-weight: 650;
+        }
+
+        .account-profile {
+            display: flex;
+            align-items: center;
+            gap: 13px;
+            padding-bottom: 19px;
+            border-bottom: 1px solid #e8edf1;
+        }
+
+        .avatar {
+            display: grid;
+            width: 42px;
+            height: 42px;
+            flex: 0 0 auto;
+            place-items: center;
+            border-radius: 50%;
+            background: #e7eef3;
+            color: var(--navy);
+            font-size: 15px;
+            font-weight: 700;
+        }
+
+        .account-name {
+            overflow-wrap: anywhere;
+            color: #263c4d;
+            font-size: 14px;
+            font-weight: 650;
+        }
+
+        .account-status {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            margin: 5px 0 0;
+            color: var(--muted);
+            font-size: 12px;
+        }
+
+        .status-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: #318663;
+        }
+
+        .account-footnote {
+            margin: 16px 0 0;
+            color: var(--muted);
+            font-size: 12px;
+            line-height: 1.55;
+        }
+
+        @media (max-width: 680px) {
+            .topbar {
+                min-height: 62px;
+                padding: 0 16px;
+            }
+
+            .topbar-actions {
+                gap: 11px;
+            }
+
+            .registration-link {
+                font-size: 12px;
+            }
+
+            .dashboard {
+                width: min(100% - 28px, 1080px);
+                margin: 32px auto;
+            }
+
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .action-card {
+                min-height: 220px;
+            }
+        }
+
+        @media (max-width: 420px) {
+            .brand {
+                gap: 7px;
+                font-size: 12px;
+            }
+
+            .brand-mark {
+                width: 30px;
+                height: 30px;
+            }
+
+            .topbar-actions {
+                gap: 8px;
+            }
+
+            .logout-button {
+                min-height: 34px;
+                padding: 0 9px;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                transition-duration: .01ms !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="topbar">
+        <a class="brand" href="{% url 'dashboard' %}">
+            <span class="brand-mark" aria-hidden="true">S</span>
+            <span>Student services</span>
+        </a>
+        <div class="topbar-actions">
+            <a class="registration-link" href="{% url 'student_form' %}">Student registration</a>
+            <form class="logout-form" action="{% url 'logout' %}" method="post">
+                {% csrf_token %}
+                <button class="logout-button" type="submit">Sign out</button>
+            </form>
+        </div>
+    </header>
+
+    <main class="dashboard">
+        <p class="breadcrumb">Student services / Dashboard</p>
+        <div class="page-heading">
+            <h1>Welcome back, {{ request.user.username }}</h1>
+            <p>Access your student services and account information from here.</p>
+        </div>
+
+        <div class="dashboard-grid">
+            <section class="card action-card" aria-labelledby="registration-title">
+                <div>
+                    <p class="card-label">Quick action</p>
+                    <h2 id="registration-title">Student registration</h2>
+                    <p>Submit your student details using the registration form.</p>
+                </div>
+                <a class="primary-link" href="{% url 'student_form' %}">Open registration form</a>
+            </section>
+
+            <aside class="card account-card" aria-labelledby="account-title">
+                <h2 id="account-title">Account</h2>
+                <div class="account-profile">
+                    <span class="avatar" aria-hidden="true">{{ request.user.username|first|upper }}</span>
+                    <div>
+                        <div class="account-name">{{ request.user.username }}</div>
+                        <p class="account-status"><span class="status-dot" aria-hidden="true"></span>Signed in</p>
+                    </div>
+                </div>
+                <p class="account-footnote">You are signed in to the student services portal.</p>
+            </aside>
+        </div>
+    </main>
+</body>
+</html>
