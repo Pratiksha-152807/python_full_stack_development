@@ -3,9 +3,16 @@ from django.contrib import messages
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from .models import Student_table
-from .forms import Studentform_data
+from .forms import RegistrationForm, Studentform_data
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.views import (
+    PasswordResetCompleteView,
+    PasswordResetConfirmView,
+    PasswordResetDoneView,
+    PasswordResetView,
+)
+from django.urls import reverse_lazy
 
 
 def home(request):
@@ -103,6 +110,39 @@ def user_login(request):
     return render(request, 'login.html')
 
 
+def register(request):
+    if request.method == 'POST':
+        form = RegistrationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Your account has been created. You can now sign in.')
+            return redirect('login')
+    else:
+        form = RegistrationForm()
+
+    return render(request, 'registration.html', {'form': form})
+
+
+class UserPasswordResetView(PasswordResetView):
+    template_name = 'registration/password_reset_form.html'
+    email_template_name = 'registration/password_reset_email.html'
+    subject_template_name = 'registration/password_reset_subject.txt'
+    success_url = reverse_lazy('password_reset_done')
+
+
+class UserPasswordResetDoneView(PasswordResetDoneView):
+    template_name = 'registration/password_reset_done.html'
+
+
+class UserPasswordResetConfirmView(PasswordResetConfirmView):
+    template_name = 'registration/password_reset_confirm.html'
+    success_url = reverse_lazy('password_reset_complete')
+
+
+class UserPasswordResetCompleteView(PasswordResetCompleteView):
+    template_name = 'registration/password_reset_complete.html'
+
+
 @login_required(login_url='login')
 def dashboard(request):
     return render(request, 'dashboard.html')
@@ -114,3 +154,20 @@ def user_logout(request):
         return redirect('login')
 
     return HttpResponse("Invalid request method.")
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from rest_framework import status
+from .models import Student_table
+from .serializers import StudentSerializer
+@api_view(['GET', 'POST'])
+def student_api(request):
+    if request.method == 'GET':
+        students = Student_table.objects.all()
+        serializer = StudentSerializer(students, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    elif request.method == 'POST':
+        serializer = StudentSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

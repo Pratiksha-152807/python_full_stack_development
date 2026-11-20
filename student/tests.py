@@ -1,4 +1,8 @@
 from django.test import TestCase
+import re
+
+from django.core import mail
+from django.test import TestCase, override_settings
 from django.contrib.auth.models import User
 from .models import Student_table
 
@@ -50,6 +54,7 @@ class AuthenticationViewTests(TestCase):
     def setUp(self):
         self.user = User.objects.create_user(
             username='student-test',
+            email='student@example.com',
             password='test-password-123',
         )
 
@@ -68,6 +73,79 @@ class AuthenticationViewTests(TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'Invalid username or password.')
+
+    def test_login_links_to_registration_and_password_reset(self):
+        response = self.client.get('/login/')
+
+        self.assertContains(response, 'Create a new account')
+        self.assertContains(response, 'Forgot your password?')
+
+    def test_registration_creates_user_and_redirects_to_login(self):
+        response = self.client.post('/register/', {
+            'username': 'new-student',
+            'email': 'new-student@example.com',
+            'password1': 'different-password-456',
+            'password2': 'different-password-456',
+        }, follow=True)
+
+        self.assertRedirects(response, '/login/')
+        self.assertContains(response, 'Your account has been created.')
+        user = User.objects.get(username='new-student')
+        self.assertEqual(user.email, 'new-student@example.com')
+        self.assertTrue(user.check_password('different-password-456'))
+
+    def test_registration_rejects_duplicate_username(self):
+        response = self.client.post('/register/', {
+            'username': self.user.username,
+            'email': 'another@example.com',
+            'password1': 'different-password-456',
+            'password2': 'different-password-456',
+        })
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'already exists')
+        self.assertEqual(User.objects.count(), 1)
+
+    @override_settings(EMAIL_BACKEND='django.core.mail.backends.locmem.EmailBackend')
+    def test_password_reset_email_link_changes_password(self):
+        response = self.client.post('/password-reset/', {
+            'email': self.user.email,
+        }, follow=True)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'If an account exists')
+        self.assertEqual(len(mail.outbox), 1)
+        self.assertIn('Reset your Student services password', mail.outbox[0].subject)
+
+        reset_link = re.search(
+            r'/reset/([^/]+)/([^/\s]+)/',
+            mail.outbox[0].body,
+        )
+        self.assertIsNotNone(reset_link)
+        uidb64, token = reset_link.groups()
+        reset_url = f'/reset/{uidb64}/{token}/'
+        response = self.client.get(reset_url, follow=True)
+        self.assertEqual(response.status_code, 200)
+        reset_url = response.redirect_chain[-1][0]
+
+        response = self.client.post(reset_url, {
+            'new_password1': 'changed-password-456',
+            'new_password2': 'changed-password-456',
+        }, follow=True)
+
+        self.assertContains(response, 'Your password has been changed.')
+        self.user.refresh_from_db()
+        self.assertTrue(self.user.check_password('changed-password-456'))
+
+    @override_settings(EMAIL_BACKEND='django.core.mail.backends.locmem.EmailBackend')
+    def test_password_reset_does_not_disclose_unknown_email(self):
+        response = self.client.post('/password-reset/', {
+            'email': 'unknown@example.com',
+        }, follow=True)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'If an account exists')
+        self.assertEqual(len(mail.outbox), 0)
 
     def test_login_opens_dashboard(self):
         response = self.client.post('/login/', {

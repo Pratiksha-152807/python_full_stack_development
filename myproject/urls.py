@@ -26,7 +26,14 @@ urlpatterns = [
     path('add/', views.forms1, name='add'),
     path('add_form/', views.student_form_dj, name='student_form'),
     path('login/', views.user_login, name='login'),
+    path('register/', views.register, name='register'),
+    path('password-reset/', views.UserPasswordResetView.as_view(), name='password_reset'),
+    path('password-reset/done/', views.UserPasswordResetDoneView.as_view(), name='password_reset_done'),
+    path('reset/<uidb64>/<token>/', views.UserPasswordResetConfirmView.as_view(), name='password_reset_confirm'),
+    path('reset/done/', views.UserPasswordResetCompleteView.as_view(), name='password_reset_complete'),
     path('dashboard/', views.dashboard, name='dashboard'),
-    path('logout/', views.user_logout, name='logout')
+    path('logout/', views.user_logout, name='logout'),
+    path('api/students/', views.student_api, name='student_api'),
+    
 ]
 
